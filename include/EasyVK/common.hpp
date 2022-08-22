@@ -14,6 +14,7 @@ using i32   = std::int32_t;
 using i64   = std::int64_t;
 using ccstr = const char*;
 
+
 #include "VkBootstrap.h"
 #include "vk_mem_alloc.h"
 #include <vulkan/vulkan.h>

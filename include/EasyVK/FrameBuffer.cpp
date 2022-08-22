@@ -46,7 +46,7 @@ void Framebuffer::create(VkDevice device, vkb::Swapchain& swapchain,
         depthImageView,
         swapchainImageViews[i],
     };
-    CI.attachmentCount = std::size(attachments);
+    CI.attachmentCount = (u32) std::size(attachments);
     CI.pAttachments    = attachments;
 
     auto result = vkCreateFramebuffer(device, &CI, nullptr, &framebuffers[i]);

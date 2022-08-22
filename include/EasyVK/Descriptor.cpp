@@ -39,7 +39,7 @@ DescriptorPool::allocSets(VkDevice device, u32 setCount,
 
 void DescriptorPool::freeSets(VkDevice                      device,
                               std::vector<VkDescriptorSet>& sets) {
-  vkFreeDescriptorSets(device, descPool, sets.size(), sets.data());
+  vkFreeDescriptorSets(device, descPool,(u32) sets.size(), sets.data());
 }
 
 VkDescriptorSet DescriptorPool::allocSet(VkDevice              device,
