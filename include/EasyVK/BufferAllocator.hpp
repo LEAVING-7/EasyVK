@@ -46,6 +46,8 @@ struct AllocatedImage {
   VkImage       image;
   VmaAllocation allocation;
   size_t        size;
+
+  EZVK_CONVERT_OP(VkImage, image);
 };
 
 struct AllocatedBuffer {
@@ -61,6 +63,8 @@ struct AllocatedBuffer {
 
   void transferMemory(BufferAllocator& allocator, void* const data,
                       size_t size);
+
+  EZVK_CONVERT_OP(VkBuffer, buffer);
 };
 
 class BufferAllocator {
@@ -75,9 +79,13 @@ public:
                    VmaAllocationInfo*       pAllocInfo = nullptr);
   void destroyImage(AllocatedImage image);
   [[nodiscard]] AllocatedBuffer
-       createBuffer(VkBufferCreateInfo*      pInfo,
-                    VmaAllocationCreateInfo* pAllocCreateInfo,
-                    VmaAllocationInfo*       pAllocInfo = nullptr);
+  createBuffer(VkBufferCreateInfo*      pInfo,
+               VmaAllocationCreateInfo* pAllocCreateInfo,
+               VmaAllocationInfo*       pAllocInfo = nullptr);
+  [[nodiscard]] AllocatedBuffer
+  createBufferExclusive(VkDeviceSize bufferSize, VkBufferUsageFlags bufferUsage,
+                        VkMemoryPropertyFlags requiredFlags,
+                        VkMemoryPropertyFlags preferredFlags);
   void destroyBuffer(AllocatedBuffer buffer);
 
   VkResult mmap(AllocatedBuffer& buffer, void** ppData) {

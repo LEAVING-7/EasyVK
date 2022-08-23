@@ -1,10 +1,15 @@
 #pragma once
 #include "common.hpp"
 
+#include <initializer_list>
+#include <span>
 namespace ezvk {
 
 struct DescriptorPoolSizeList {
   std::vector<VkDescriptorPoolSize> list;
+  DescriptorPoolSizeList() = default;
+  DescriptorPoolSizeList(std::initializer_list<VkDescriptorPoolSize>&& lists)
+      : list(lists.begin(), lists.end()) {}
 
   DescriptorPoolSizeList& add(VkDescriptorType type, u32 descriptorCount) {
     list.push_back({type, descriptorCount});
@@ -66,6 +71,9 @@ struct DescriptorSetLayout {
   }
 
   void destroy(VkDevice device);
+
+  EZVK_CONVERT_OP(VkDescriptorSetLayout, setLayout);
+  EZVK_ADDRESS_OP(VkDescriptorSetLayout, setLayout);
 };
 
 } // namespace ezvk

@@ -2,6 +2,32 @@
 #include "common.hpp"
 
 namespace ezvk {
+struct PipelineLayout {
+  VkPipelineLayout layout;
+
+  VkResult create(VkDevice                             device,
+                  std::vector<VkDescriptorSetLayout>&& setLayout,
+                  std::vector<VkPushConstantRange>&&   pushConstant) {
+    VkPipelineLayoutCreateInfo CI{
+        .sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+        .pNext                  = nullptr,
+        .flags                  = 0,
+        .setLayoutCount         = (u32)setLayout.size(),
+        .pSetLayouts            = setLayout.data(),
+        .pushConstantRangeCount = (u32)pushConstant.size(),
+        .pPushConstantRanges    = pushConstant.data(),
+    };
+    return vkCreatePipelineLayout(device, &CI, nullptr, &layout);
+  }
+
+  void destroy(VkDevice device) {
+    return vkDestroyPipelineLayout(device, layout, nullptr);
+  }
+  // namespace ezvk
+
+  EZVK_CONVERT_OP(VkPipelineLayout, layout);
+};
+
 struct GraphicPipelineBuilder {
 
   std::vector<VkPipelineShaderStageCreateInfo> shaders;
@@ -147,4 +173,5 @@ public:
   }
 };
 
+struct ComputePipelineBuilder {};
 } // namespace ezvk

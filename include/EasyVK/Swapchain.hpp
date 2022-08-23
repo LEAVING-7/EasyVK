@@ -16,6 +16,6 @@ public:
      return m_swapchain.image_count;
   }
 
-  EZVK_CONVERT_OP(SwapchainKHR, m_swapchain);
+  EZVK_CONVERT_OP(VkSwapchainKHR, m_swapchain);
 };
 } // namespace ezvk

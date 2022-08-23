@@ -35,6 +35,10 @@ void CommandBuffer::reset(VkCommandBufferResetFlags flag) {
   vkResetCommandBuffer(cmdBuffer, flag);
 }
 
+void CommandBuffer::beginWithOneTimeSubmit() {
+  begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+}
+
 void CommandBuffer::begin(
     VkCommandBufferUsageFlags             flag,
     const VkCommandBufferInheritanceInfo* pInheritanceInfo) {

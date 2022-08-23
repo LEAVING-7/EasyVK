@@ -8,8 +8,8 @@ struct CommandPool {
   void create(VkDevice device, VkCommandPoolCreateFlags flag, u32 queueIndex);
   void destroy(VkDevice device);
 
-  EZVK_CONVERT_OP(CommandPool, cmdPool);
-  EZVK_ADDRESS_OP(CommandPool, cmdPool);
+  EZVK_CONVERT_OP(VkCommandPool, cmdPool);
+  EZVK_ADDRESS_OP(VkCommandPool, cmdPool);
 };
 struct CommandBuffer {
   VkCommandBuffer cmdBuffer;
@@ -19,6 +19,7 @@ struct CommandBuffer {
   void free(VkDevice device, VkCommandPool cmdPool);
 
   void reset(VkCommandBufferResetFlags flag);
+  void beginWithOneTimeSubmit();
   void begin(VkCommandBufferUsageFlags             flag,
              const VkCommandBufferInheritanceInfo* pInheritanceInfo = nullptr);
   void end();
@@ -90,7 +91,7 @@ struct CommandBuffer {
                            pImageMemoryBarriers);
   }
 
-  EZVK_CONVERT_OP(CommandBuffer, cmdBuffer);
-  EZVK_ADDRESS_OP(CommandBuffer, cmdBuffer);
+  EZVK_CONVERT_OP(VkCommandBuffer, cmdBuffer);
+  EZVK_ADDRESS_OP(VkCommandBuffer, cmdBuffer);
 };
 } // namespace ezvk

@@ -10,8 +10,8 @@ struct Fence {
   void     destroy(VkDevice device);
   VkResult reset(VkDevice device);
 
-  EZVK_CONVERT_OP(Fence, fence);
-  EZVK_ADDRESS_OP(Fence, fence);
+  EZVK_CONVERT_OP(VkFence, fence);
+  EZVK_ADDRESS_OP(VkFence, fence);
 };
 struct Semaphore {
   VkSemaphore semaphore;
@@ -19,7 +19,7 @@ struct Semaphore {
   void create(VkDevice device);
   void destroy(VkDevice device);
 
-  EZVK_CONVERT_OP(Semaphore, semaphore);
-  EZVK_ADDRESS_OP(Semaphore, semaphore);
+  EZVK_CONVERT_OP(VkSemaphore, semaphore);
+  EZVK_ADDRESS_OP(VkSemaphore, semaphore);
 };
 } // namespace ezvk

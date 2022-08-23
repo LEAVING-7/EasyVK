@@ -3,7 +3,7 @@
 
 namespace ezvk {
 class Instance {
-public:
+private:
   vkb::Instance m_instance;
 
 private:
@@ -16,10 +16,11 @@ public:
     m_fpDebugMessenger = callback;
   };
 
-  void create(std::vector<ccstr>& layers, std::vector<ccstr>& extensions,
+  void create(std::vector<ccstr>&& layers, std::vector<ccstr>&& extensions,
               ccstr appName, bool enableValidationLayer = true);
   void destroy();
 
-  EZVK_CONVERT_OP(Instance, m_instance);
+  EZVK_CONVERT_OP(VkInstance, m_instance);
+  EZVK_CONVERT_OP(vkb::Instance, m_instance);
 };
 } // namespace ezvk

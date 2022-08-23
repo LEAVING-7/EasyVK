@@ -20,12 +20,12 @@ using ccstr = const char*;
 #include <vulkan/vulkan.h>
 
 #define EZVK_CONVERT_OP(name, value)                                           \
-  operator Vk##name() {                                                        \
+  operator name() {                                                        \
     return value;                                                              \
   }
 
 #define EZVK_ADDRESS_OP(name, value)                                           \
-  Vk##name* operator&() {                                                      \
+  name* operator&() {                                                      \
     return &value;                                                             \
   }
 

@@ -1,7 +1,9 @@
 #include "BufferAllocator.hpp"
 
 namespace ezvk {
-
+/*
+  Sampler
+ */
 void Sampler::create(VkDevice device, VkFilter magFilter, VkFilter minFilter,
                      VkSamplerMipmapMode  mipmapMode,
                      VkSamplerAddressMode addressModeU,
@@ -38,6 +40,9 @@ void Sampler::destroy(VkDevice device) {
   vkDestroySampler(device, sampler, nullptr);
 }
 
+/* ImageView
+ */
+
 void ImageView::create(VkDevice device, VkImage image, VkImageViewType viewType,
                        VkFormat format, VkComponentMapping components,
                        VkImageSubresourceRange range) {
@@ -58,6 +63,10 @@ void ImageView::create(VkDevice device, VkImage image, VkImageViewType viewType,
 void ImageView::destroy(VkDevice device) {
   vkDestroyImageView(device, imageView, nullptr);
 }
+
+/*
+  AllocatedBuffer
+ */
 
 void AllocatedBuffer::copyTo(AllocatedBuffer& dstBuffer, VkDevice device,
                              CommandPool pool, VkQueue transferQueue) {
@@ -120,6 +129,7 @@ void AllocatedBuffer::transferMemory(BufferAllocator& allocator,
 /*
   BufferAllocator
  */
+
 void BufferAllocator::create(VkPhysicalDevice gpu, VkDevice device,
                              VkInstance instance) {
   VmaAllocatorCreateInfo allocatorCI{
@@ -141,11 +151,14 @@ BufferAllocator::createImage(VkImageCreateInfo*       pInfo,
   VkResult       result = vmaCreateImage(m_allocator, pInfo, pAllocCreateInfo,
                                          &ret.image, &ret.allocation, pAllocInfo);
   assert(result == VK_SUCCESS);
+
   return ret;
 }
 void BufferAllocator::destroyImage(AllocatedImage image) {
   vmaDestroyImage(m_allocator, image.image, image.allocation);
 }
+
+// [out] pAllocInfo
 AllocatedBuffer
 BufferAllocator::createBuffer(VkBufferCreateInfo*      pInfo,
                               VmaAllocationCreateInfo* pAllocCreateInfo,
@@ -156,6 +169,29 @@ BufferAllocator::createBuffer(VkBufferCreateInfo*      pInfo,
                                     &ret.buffer, &ret.allocation, pAllocInfo);
   assert(result == VK_SUCCESS);
   return ret;
+}
+AllocatedBuffer BufferAllocator::createBufferExclusive(
+    VkDeviceSize bufferSize, VkBufferUsageFlags bufferUsage,
+    VkMemoryPropertyFlags requiredFlags, VkMemoryPropertyFlags preferredFlags) {
+  VkBufferCreateInfo CI{
+      .sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+      .pNext                 = nullptr,
+      .flags                 = 0,
+      .size                  = bufferSize,
+      .sharingMode           = VK_SHARING_MODE_EXCLUSIVE,
+      .queueFamilyIndexCount = 0,
+      .pQueueFamilyIndices   = nullptr,
+  };
+  VmaAllocationCreateInfo AI{
+      .flags          = 0,
+      .usage          = VMA_MEMORY_USAGE_UNKNOWN,
+      .requiredFlags  = requiredFlags,
+      .preferredFlags = preferredFlags,
+      .memoryTypeBits = 0,
+      .pool           = 0,
+      .pUserData      = 0,
+  };
+  return createBuffer(&CI, &AI);
 }
 
 void BufferAllocator::destroyBuffer(AllocatedBuffer buffer) {
