@@ -178,6 +178,7 @@ AllocatedBuffer BufferAllocator::createBufferExclusive(
       .pNext                 = nullptr,
       .flags                 = 0,
       .size                  = bufferSize,
+      .usage                 = bufferUsage,
       .sharingMode           = VK_SHARING_MODE_EXCLUSIVE,
       .queueFamilyIndexCount = 0,
       .pQueueFamilyIndices   = nullptr,

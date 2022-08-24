@@ -1,17 +1,18 @@
 #include "Shader.hpp"
 namespace ezvk {
 
-void Shader::create(VkDevice device, u32* code, size_t size, ccstr entryName) {
+void Shader::create(VkDevice device, VkShaderStageFlagBits stage, u32* code,
+                    size_t size, ccstr entryName,
+                    const VkSpecializationInfo* pSpecializationInfo) {
   assert(size % 4 == 0);
-  VkResult result;
-
+  m_stage      = stage;
   m_shaderInfo = {
       .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
       .pNext = nullptr,
       .flags = 0,
       .stage = m_stage,
       .pName = entryName,
-      .pSpecializationInfo = nullptr,
+      .pSpecializationInfo = pSpecializationInfo,
   };
 
   VkShaderModuleCreateInfo moduleCreateInfo{
@@ -22,6 +23,7 @@ void Shader::create(VkDevice device, u32* code, size_t size, ccstr entryName) {
       .pCode    = code,
   };
 
+  VkResult result;
   result = vkCreateShaderModule(device, &moduleCreateInfo, nullptr,
                                 &m_shaderInfo.module);
   assert(result == VK_SUCCESS);

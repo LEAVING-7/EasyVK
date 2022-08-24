@@ -10,7 +10,7 @@ void Instance::create(std::vector<ccstr>&& layers,
       .set_engine_name(appName)
       .set_app_version(1)
       .set_engine_version(1)
-      .require_api_version(1, 1)
+      .require_api_version(1, 3)
       .set_headless();
   std::for_each(layers.cbegin(), layers.cend(),
                 [&](ccstr name) { builder.enable_layer(name); });

@@ -173,5 +173,36 @@ public:
   }
 };
 
-struct ComputePipelineBuilder {};
+struct ComputePipelineBuilder {
+  std::vector<VkComputePipelineCreateInfo> computeCreateInfo;
+
+  ComputePipelineBuilder& add(VkPipelineCreateFlags           flags,
+                              VkPipelineShaderStageCreateInfo stage,
+                              VkPipelineLayout                layout,
+                              VkPipeline basePipelineHandle = VK_NULL_HANDLE,
+                              i32        basePipelineIndex  = 0) {
+    VkComputePipelineCreateInfo CI{
+        .sType              = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO,
+        .pNext              = nullptr,
+        .flags              = flags,
+        .stage              = stage,
+        .layout             = layout,
+        .basePipelineHandle = basePipelineHandle,
+        .basePipelineIndex  = basePipelineIndex,
+    };
+    computeCreateInfo.push_back(CI);
+    return *this;
+  }
+
+  std::vector<VkPipeline> build(VkDevice        device,
+                                VkPipelineCache pipelineCache) {
+    std::vector<VkPipeline> ret(computeCreateInfo.size());
+
+    auto res = vkCreateComputePipelines(
+        device, pipelineCache, (u32)computeCreateInfo.size(),
+        computeCreateInfo.data(), nullptr, ret.data());
+    assert(res == VK_SUCCESS);
+    return ret;
+  }
+};
 } // namespace ezvk

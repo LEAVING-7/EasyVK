@@ -39,7 +39,7 @@ DescriptorPool::allocSets(VkDevice device, u32 setCount,
 
 void DescriptorPool::freeSets(VkDevice                      device,
                               std::vector<VkDescriptorSet>& sets) {
-  vkFreeDescriptorSets(device, descPool,(u32) sets.size(), sets.data());
+  vkFreeDescriptorSets(device, descPool, (u32)sets.size(), sets.data());
 }
 
 VkDescriptorSet DescriptorPool::allocSet(VkDevice              device,
@@ -75,5 +75,30 @@ VkResult DescriptorSetLayout::create(VkDevice device, u32 bindingCount,
 void DescriptorSetLayout::destroy(VkDevice device) {
   return vkDestroyDescriptorSetLayout(device, setLayout, nullptr);
 }
+/*
+  WriteDescriptorSet
+ */
 
+WriteDescriptorSet&
+WriteDescriptorSet::add(VkDescriptorSet dstSet, uint32_t dstBinding,
+                        uint32_t dstArrayElement, uint32_t descriptorCount,
+                        VkDescriptorType              descriptorType,
+                        const VkDescriptorImageInfo*  pImageInfo,
+                        const VkDescriptorBufferInfo* pBufferInfo,
+                        const VkBufferView*           pTexelBufferView) {
+  VkWriteDescriptorSet writeDS{
+      .sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+      .pNext            = nullptr,
+      .dstSet           = dstSet,
+      .dstBinding       = dstBinding,
+      .dstArrayElement  = dstArrayElement,
+      .descriptorCount  = descriptorCount,
+      .descriptorType   = descriptorType,
+      .pImageInfo       = pImageInfo,
+      .pBufferInfo      = pBufferInfo,
+      .pTexelBufferView = pTexelBufferView,
+  };
+  writeSets.push_back(writeDS);
+  return *this;
+}
 } // namespace ezvk

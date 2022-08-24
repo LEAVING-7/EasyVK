@@ -1,5 +1,5 @@
 #include "common.hpp"
-
+namespace ezvk {
 std::optional<std::vector<u8>> readFromFile(std::string const& filename,
                                             ccstr              mode) {
   FILE* fp = ::fopen(filename.c_str(), mode);
@@ -23,3 +23,4 @@ VkResultChecker& VkResultChecker::operator=(VkResult result) {
   assert(result == VK_SUCCESS);
   return *this;
 }
+} // namespace ezvk

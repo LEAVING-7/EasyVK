@@ -1,8 +1,7 @@
 #include "Device.hpp"
 
 namespace ezvk {
-void Device::create(vkb::PhysicalDevice& gpu, std::vector<ccstr>&& layers,
-                    std::vector<ccstr>&& extensions) {
+void Device::create(vkb::PhysicalDevice& gpu) {
   vkb::DeviceBuilder builder{gpu};
 
   auto result = builder.build();

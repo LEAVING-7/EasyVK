@@ -14,21 +14,20 @@ using i32   = std::int32_t;
 using i64   = std::int64_t;
 using ccstr = const char*;
 
-
 #include "VkBootstrap.h"
 #include "vk_mem_alloc.h"
 #include <vulkan/vulkan.h>
 
 #define EZVK_CONVERT_OP(name, value)                                           \
-  operator name() {                                                        \
+  operator name() {                                                            \
     return value;                                                              \
   }
 
 #define EZVK_ADDRESS_OP(name, value)                                           \
-  name* operator&() {                                                      \
+  name* operator&() {                                                          \
     return &value;                                                             \
   }
-
+namespace ezvk {
 std::optional<std::vector<u8>> readFromFile(std::string const& filename,
                                             ccstr              mode);
 
@@ -59,3 +58,4 @@ struct VkResultChecker {
   VkResultChecker(VkResult result);
   VkResultChecker& operator=(VkResult result);
 };
+} // namespace ezvk

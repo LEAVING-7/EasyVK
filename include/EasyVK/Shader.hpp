@@ -10,19 +10,20 @@ public:
   VkShaderStageFlagBits           m_stage;
   std::string                     m_name;
 
-  Shader() = default;
-  Shader(std::string const& name, VkShaderStageFlagBits stage)
-      : m_stage(stage), m_name(name){};
-  ~Shader() = default;
-
-  void create(VkDevice device, u32* code, size_t size,
-              ccstr entryName = "main");
+  void create(VkDevice device, VkShaderStageFlagBits stage, u32* code,
+              size_t size, ccstr entryName = "main",
+              const VkSpecializationInfo* pSpecializationInfo = nullptr);
 
   template <typename T, typename = std::void_t<std::is_arithmetic<T>>>
-  void create(VkDevice device, std::vector<T>& vec, ccstr entryName = "main") {
-    this->create(device, reinterpret_cast<u32*>(vec.data()), vec.size());
+  void create(VkDevice device, VkShaderStageFlagBits stage, std::vector<T>& vec,
+              ccstr                       entryName           = "main",
+              const VkSpecializationInfo* pSpecializationInfo = nullptr) {
+    this->create(device, stage, reinterpret_cast<u32*>(vec.data()), vec.size(),
+                 entryName, pSpecializationInfo);
   }
 
   void destroy(VkDevice device);
+
+  EZVK_CONVERT_OP(VkPipelineShaderStageCreateInfo, m_shaderInfo);
 };
 } // namespace ezvk

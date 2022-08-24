@@ -59,6 +59,40 @@ struct DescriptorSetLayoutBindingList {
   }
 };
 
+struct WriteDescriptorSet {
+  std::vector<VkWriteDescriptorSet> writeSets;
+
+  WriteDescriptorSet& addBuffer(VkDescriptorSet dstSet, u32 dstBinding,
+                                u32 dstArrayElement, u32 descriptorCount,
+                                VkDescriptorType              descriptorType,
+                                const VkDescriptorBufferInfo* pBufferInfo) {
+    return add(dstSet, dstBinding, dstArrayElement, descriptorCount,
+               descriptorType, nullptr, pBufferInfo, nullptr);
+  }
+  WriteDescriptorSet& addImage(VkDescriptorSet dstSet, u32 dstBinding,
+                               u32 dstArrayElement, u32 descriptorCount,
+                               VkDescriptorType             descriptorType,
+                               const VkDescriptorImageInfo* pImageInfo) {
+    return add(dstSet, dstBinding, dstArrayElement, descriptorCount,
+               descriptorType, pImageInfo, nullptr, nullptr);
+  }
+  WriteDescriptorSet& addTexelBufferView(VkDescriptorSet dstSet, u32 dstBinding,
+                                         u32                 dstArrayElement,
+                                         u32                 descriptorCount,
+                                         VkDescriptorType    descriptorType,
+                                         const VkBufferView* pTexelBufferView) {
+    return add(dstSet, dstBinding, dstArrayElement, descriptorCount,
+               descriptorType, nullptr, nullptr, pTexelBufferView);
+  }
+
+  WriteDescriptorSet& add(VkDescriptorSet dstSet, u32 dstBinding,
+                          u32 dstArrayElement, u32 descriptorCount,
+                          VkDescriptorType              descriptorType,
+                          const VkDescriptorImageInfo*  pImageInfo,
+                          const VkDescriptorBufferInfo* pBufferInfo,
+                          const VkBufferView*           pTexelBufferView);
+};
+
 struct DescriptorSetLayout {
   VkDescriptorSetLayout setLayout;
 

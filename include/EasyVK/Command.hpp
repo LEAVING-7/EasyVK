@@ -43,6 +43,10 @@ struct CommandBuffer {
   void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, u32 regionCount,
                   const VkBufferCopy* pRegions);
 
+  void dispatch(u32 groupX, u32 groupY, u32 groupZ) {
+    vkCmdDispatch(cmdBuffer, groupX, groupY, groupZ);
+  }
+
   void copyBufferToImage(VkBuffer srcBuffer, VkImage dstImage,
                          VkImageLayout dstImageLayout, u32 regionCount,
                          const VkBufferImageCopy* pRegions) {
@@ -66,6 +70,35 @@ struct CommandBuffer {
                                   u32              setCount,
                                   VkDescriptorSet* pDescriptorSets);
 
+  void pipelineBufferBarrier(
+      VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask,
+      VkDependencyFlags dependencyFlags, u32 bufferMemoryBarrierCount,
+      const VkBufferMemoryBarrier* pBufferMemoryBarriers) {
+    return pipelineBarrier(srcStageMask, dstStageMask, dependencyFlags, 0,
+                           nullptr, bufferMemoryBarrierCount,
+                           pBufferMemoryBarriers, 0, nullptr);
+  }
+
+  void pipelineMemoryBarrier(VkPipelineStageFlags   srcStageMask,
+                             VkPipelineStageFlags   dstStageMask,
+                             VkDependencyFlags      dependencyFlags,
+                             u32                    memoryBarrierCount,
+                             const VkMemoryBarrier* pMemoryBarriers) {
+    return pipelineBarrier(srcStageMask, dstStageMask, dependencyFlags,
+                           memoryBarrierCount, pMemoryBarriers, 0, nullptr, 0,
+                           nullptr);
+  }
+
+  void pipelineImageBarrier(VkPipelineStageFlags        srcStageMask,
+                            VkPipelineStageFlags        dstStageMask,
+                            VkDependencyFlags           dependencyFlags,
+                            u32                         imageMemoryBarrierCount,
+                            const VkImageMemoryBarrier* pImageMemoryBarriers) {
+    return pipelineBarrier(srcStageMask, dstStageMask, dependencyFlags, 0,
+                           nullptr, 0, nullptr, imageMemoryBarrierCount,
+                           pImageMemoryBarriers);
+  }
+
   void pipelineBarrier(VkPipelineStageFlags         srcStageMask,
                        VkPipelineStageFlags         dstStageMask,
                        VkDependencyFlags            dependencyFlags,
@@ -79,16 +112,6 @@ struct CommandBuffer {
                          memoryBarrierCount, pMemoryBarriers,
                          bufferMemoryBarrierCount, pBufferMemoryBarriers,
                          imageMemoryBarrierCount, pImageMemoryBarriers);
-  }
-
-  void pipelineImageBarriers(VkPipelineStageFlags srcStageMask,
-                             VkPipelineStageFlags dstStageMask,
-                             VkDependencyFlags    dependencyFlags,
-                             u32                  imageMemoryBarrierCount,
-                             const VkImageMemoryBarrier* pImageMemoryBarriers) {
-    return pipelineBarrier(srcStageMask, dstStageMask, dependencyFlags, 0,
-                           nullptr, 0, nullptr, imageMemoryBarrierCount,
-                           pImageMemoryBarriers);
   }
 
   EZVK_CONVERT_OP(VkCommandBuffer, cmdBuffer);
