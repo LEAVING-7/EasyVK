@@ -167,8 +167,8 @@ struct App {
     ezvk::Shader compShader;
     if (auto file = ezvk::readFromFile("main.comp.spv", "rb");
         file.has_value()) {
-      compShader.create(device, VK_SHADER_STAGE_COMPUTE_BIT, *file, "main",
-                        &specializationInfo);
+      compShader.create(device, "compute shader", VK_SHADER_STAGE_COMPUTE_BIT,
+                        *file, "main", &specializationInfo);
     } else {
       puts("failed to load compute shader");
       exit(-1);

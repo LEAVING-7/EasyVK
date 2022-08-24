@@ -8,8 +8,8 @@ namespace ezvk {
 struct DescriptorPoolSizeList {
   std::vector<VkDescriptorPoolSize> list;
   DescriptorPoolSizeList() = default;
-  DescriptorPoolSizeList(std::initializer_list<VkDescriptorPoolSize>&& lists)
-      : list(lists.begin(), lists.end()) {}
+  DescriptorPoolSizeList(std::vector<VkDescriptorPoolSize> lists)
+      : list(std::move(lists)) {}
 
   DescriptorPoolSizeList& add(VkDescriptorType type, u32 descriptorCount) {
     list.push_back({type, descriptorCount});

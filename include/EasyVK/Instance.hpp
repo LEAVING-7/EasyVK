@@ -15,8 +15,11 @@ public:
   void setDebugMessenger(PFN_vkDebugUtilsMessengerCallbackEXT callback) {
     m_fpDebugMessenger = callback;
   };
-
   void create(std::vector<ccstr>&& layers, std::vector<ccstr>&& extensions,
+              ccstr appName, bool enableValidationLayer = true) {
+    return create(layers, extensions, appName, enableValidationLayer);
+  }
+  void create(std::vector<ccstr>& layers, std::vector<ccstr>& extensions,
               ccstr appName, bool enableValidationLayer = true);
   void destroy();
 

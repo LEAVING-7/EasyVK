@@ -1,8 +1,8 @@
 #include "Instance.hpp"
 
 namespace ezvk {
-void Instance::create(std::vector<ccstr>&& layers,
-                      std::vector<ccstr>&& extensions, ccstr appName,
+void Instance::create(std::vector<ccstr>&  layers,
+                      std::vector<ccstr>& extensions, ccstr appName,
                       bool enableValidationLayer) {
   m_enableValidationLayer = enableValidationLayer;
   vkb::InstanceBuilder builder{};

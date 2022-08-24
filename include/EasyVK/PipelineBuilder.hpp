@@ -7,7 +7,12 @@ struct PipelineLayout {
 
   VkResult create(VkDevice                             device,
                   std::vector<VkDescriptorSetLayout>&& setLayout,
-                  std::vector<VkPushConstantRange>&&   pushConstant) {
+                  std::vector<VkPushConstantRange>&&   pushConstants) {
+    return create(device, setLayout, pushConstants);
+  }
+  VkResult create(VkDevice                            device,
+                  std::vector<VkDescriptorSetLayout>& setLayout,
+                  std::vector<VkPushConstantRange>&   pushConstant) {
     VkPipelineLayoutCreateInfo CI{
         .sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
         .pNext                  = nullptr,
