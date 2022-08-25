@@ -14,7 +14,7 @@ using namespace std::chrono_literals;
 #include <cstdio>
 #include <stdexcept>
 
-u32 BUFFER_ELEMENTS = 10000;
+u32 BUFFER_ELEMENTS = 1024;
 
 VkDeviceSize bufferSize;
 struct App {
@@ -42,14 +42,19 @@ struct App {
   VkPipeline computePipeline;
 
   void init() {
-    instance.create({}, {}, "ComputeShaders");
-    vkb::PhysicalDeviceSelector selector(instance);
-    selector.set_minimum_version(1, 1).require_separate_compute_queue();
-    selector.add_required_extension(
-        VK_KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME);
-    auto result = selector.select();
-
-    device.create(result.value());
+    instance.create({}, {}, [](vkb::InstanceBuilder& builder) {
+      builder.set_app_name("AppName")
+          .set_headless()
+          .set_engine_name("EngineName")
+          .set_app_version(1)
+          .require_api_version(1, 2);
+    });
+    device.create(instance, [](vkb::PhysicalDeviceSelector& selector) {
+      selector.set_minimum_version(1, 1)
+          .require_separate_compute_queue()
+          .add_required_extension(
+              VK_KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME);
+    });
     if (auto computeResult = device.m_device.get_queue(vkb::QueueType::compute);
         computeResult.has_value()) {
       computeQueue = computeResult.value();
@@ -203,7 +208,7 @@ struct App {
     cmdCompute.bindDescriptorSetNoDynamic(VK_PIPELINE_BIND_POINT_COMPUTE,
                                           pipelineLayout, 0, 1, &descriptorSet);
 
-    vkCmdDispatch(cmdCompute, BUFFER_ELEMENTS, 1, 1);
+    vkCmdDispatch(cmdCompute, BUFFER_ELEMENTS / 64, 1, 1);
 
     barrier.srcAccessMask       = VK_ACCESS_SHADER_WRITE_BIT;
     barrier.dstAccessMask       = VK_ACCESS_TRANSFER_READ_BIT;

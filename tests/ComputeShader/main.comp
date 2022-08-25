@@ -1,12 +1,11 @@
 #version 450
-
 #extension GL_EXT_debug_printf : enable
 
 layout(binding = 0) buffer Pos {
    uint values[ ];
 };
 
-layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout (local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
 
 layout (constant_id = 0) const uint BUFFER_ELEMENTS = 0;
 
@@ -27,8 +26,8 @@ uint fibonacci(uint n) {
 void main() 
 {
 	uint index = gl_GlobalInvocationID.x;
-  // debugPrintfEXT("\n index: %u  BUFFER_ELEMENT: %u \n", index, BUFFER_ELEMENTS);
+  debugPrintfEXT("\n index: %u  BUFFER_ELEMENT: %u \n", index, BUFFER_ELEMENTS);
 	if (index >= BUFFER_ELEMENTS) 
 		return;	
-	values[index] *= 2;
+	values[index] = (values[index] * 2);
 }
