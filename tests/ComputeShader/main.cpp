@@ -200,14 +200,15 @@ struct App {
         .size                = VK_WHOLE_SIZE,
     };
 
-    cmdCompute.pipelineBarrier(
-        VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
-        VK_ACCESS_NONE, 0, nullptr, 1, &barrier, 0, nullptr);
+    cmdCompute
+        .pipelineBarrier(VK_PIPELINE_STAGE_HOST_BIT,
+                         VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_ACCESS_NONE,
+                         0, nullptr, 1, &barrier, 0, nullptr)
 
-    cmdCompute.bindPipeline(VK_PIPELINE_BIND_POINT_COMPUTE, computePipeline);
-    cmdCompute.bindDescriptorSetNoDynamic(VK_PIPELINE_BIND_POINT_COMPUTE,
-                                          pipelineLayout, 0, 1, &descriptorSet);
-    cmdCompute.dispatch(BUFFER_ELEMENTS / 64, 1, 1);
+        .bindPipeline(VK_PIPELINE_BIND_POINT_COMPUTE, computePipeline)
+        .bindDescriptorSetNoDynamic(VK_PIPELINE_BIND_POINT_COMPUTE,
+                                    pipelineLayout, 0, 1, &descriptorSet)
+        .dispatch(BUFFER_ELEMENTS / 64, 1, 1);
 
     barrier.srcAccessMask       = VK_ACCESS_SHADER_WRITE_BIT;
     barrier.dstAccessMask       = VK_ACCESS_TRANSFER_READ_BIT;
@@ -216,10 +217,11 @@ struct App {
     barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 
-    cmdCompute.pipelineBarrier(VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
-                               VK_PIPELINE_STAGE_TRANSFER_BIT, VK_ACCESS_NONE,
-                               0, nullptr, 1, &barrier, 0, nullptr);
-    cmdCompute.copyBuffer(deviceBuffer, hostBuffer, 1, &copyRegion);
+    cmdCompute
+        .pipelineBarrier(VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                         VK_PIPELINE_STAGE_TRANSFER_BIT, VK_ACCESS_NONE, 0,
+                         nullptr, 1, &barrier, 0, nullptr)
+        .copyBuffer(deviceBuffer, hostBuffer, 1, &copyRegion);
 
     barrier.srcAccessMask       = VK_ACCESS_TRANSFER_WRITE_BIT;
     barrier.dstAccessMask       = VK_ACCESS_HOST_READ_BIT;
