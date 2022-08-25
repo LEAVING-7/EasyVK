@@ -230,10 +230,10 @@ struct App {
     barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 
-    cmdCompute.pipelineBufferBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                     VK_PIPELINE_STAGE_HOST_BIT, 0, 1,
-                                     &barrier);
-    cmdCompute.end();
+    cmdCompute
+        .pipelineBufferBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT,
+                               VK_PIPELINE_STAGE_HOST_BIT, 0, 1, &barrier)
+        .end();
 
     computeFence.reset(device);
     VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_TRANSFER_BIT;
