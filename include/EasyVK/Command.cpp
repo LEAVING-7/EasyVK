@@ -31,8 +31,8 @@ void CommandBuffer::free(VkDevice device, VkCommandPool cmdPool) {
   vkFreeCommandBuffers(device, cmdPool, 1, &cmdBuffer);
 }
 
-void CommandBuffer::reset(VkCommandBufferResetFlags flag) {
-  vkResetCommandBuffer(cmdBuffer, flag);
+VkResult CommandBuffer::reset(VkCommandBufferResetFlags flag) {
+  return vkResetCommandBuffer(cmdBuffer, flag);
 }
 
 void CommandBuffer::beginWithOneTimeSubmit() {
@@ -55,67 +55,80 @@ void CommandBuffer::end() {
   vkEndCommandBuffer(cmdBuffer);
 }
 
-void CommandBuffer::beginRenderPass(VkRenderPassBeginInfo* pRenderPassBI,
-                                    VkSubpassContents      contents) {
+CommandBuffer&
+CommandBuffer::beginRenderPass(VkRenderPassBeginInfo* pRenderPassBI,
+                               VkSubpassContents      contents) {
   vkCmdBeginRenderPass(cmdBuffer, pRenderPassBI, contents);
+  return *this;
 }
-void CommandBuffer::endRenderPass() {
+CommandBuffer& CommandBuffer::endRenderPass() {
   vkCmdEndRenderPass(cmdBuffer);
+  return *this;
 }
 
-void CommandBuffer::bindVertexBuffers(u32 firstBinding, u32 bindingCount,
-                                      const VkBuffer*     pBuffers,
-                                      const VkDeviceSize* pOffsets) {
+CommandBuffer& CommandBuffer::bindVertexBuffers(u32             firstBinding,
+                                                u32             bindingCount,
+                                                const VkBuffer* pBuffers,
+                                                const VkDeviceSize* pOffsets) {
   vkCmdBindVertexBuffers(cmdBuffer, firstBinding, bindingCount, pBuffers,
                          pOffsets);
+  return *this;
 }
 
-void CommandBuffer::bindVertexBuffer(VkBuffer buffer) {
+CommandBuffer& CommandBuffer::bindVertexBuffer(VkBuffer buffer) {
   VkDeviceSize offset = 0;
-  bindVertexBuffers(0, 1, &buffer, &offset);
+  return bindVertexBuffers(0, 1, &buffer, &offset);
 }
 
-void CommandBuffer::bindIndexBuffer(VkBuffer buffer, VkIndexType indexType,
-                                    size_t offset) {
+CommandBuffer& CommandBuffer::bindIndexBuffer(VkBuffer    buffer,
+                                              VkIndexType indexType,
+                                              size_t      offset) {
   vkCmdBindIndexBuffer(cmdBuffer, buffer, offset, indexType);
+  return *this;
 }
 
-void CommandBuffer::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer,
-                               u32 regionCount, const VkBufferCopy* pRegions) {
+CommandBuffer& CommandBuffer::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer,
+                                         u32                 regionCount,
+                                         const VkBufferCopy* pRegions) {
   vkCmdCopyBuffer(cmdBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
+  return *this;
 }
 
-void CommandBuffer::bindPipeline(VkPipelineBindPoint bindPoint,
-                                 VkPipeline          pipeline) {
+CommandBuffer& CommandBuffer::bindPipeline(VkPipelineBindPoint bindPoint,
+                                           VkPipeline          pipeline) {
   vkCmdBindPipeline(cmdBuffer, bindPoint, pipeline);
+  return *this;
 }
 
-void CommandBuffer::bindPipelineGraphic(VkPipeline pipeline) {
+CommandBuffer& CommandBuffer::bindPipelineGraphic(VkPipeline pipeline) {
   vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+  return *this;
 }
 
-void CommandBuffer::draw(u32 vertexCount, u32 instanceCount, u32 firstVertex,
-                         u32 firstInstance) {
+CommandBuffer& CommandBuffer::draw(u32 vertexCount, u32 instanceCount,
+                                   u32 firstVertex, u32 firstInstance) {
   vkCmdDraw(cmdBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
+  return *this;
 }
 
-void CommandBuffer::drawIndexed(u32 indexCount, u32 instanceCount,
-                                u32 firstIndex, u32 vertexOffset,
-                                u32 firstInstance) {
+CommandBuffer& CommandBuffer::drawIndexed(u32 indexCount, u32 instanceCount,
+                                          u32 firstIndex, u32 vertexOffset,
+                                          u32 firstInstance) {
   vkCmdDrawIndexed(cmdBuffer, indexCount, instanceCount, firstIndex,
                    vertexOffset, firstInstance);
+  return *this;
 }
 
-void CommandBuffer::bindDescriptorSet(VkPipelineBindPoint bindPoint,
-                                      VkPipelineLayout layout, u32 firstSet,
-                                      u32              setCount,
-                                      VkDescriptorSet* pDescriptorSets,
-                                      u32              dynamicOffsetCount,
-                                      u32*             pDynamicOffsets) {
+CommandBuffer&
+CommandBuffer::bindDescriptorSet(VkPipelineBindPoint bindPoint,
+                                 VkPipelineLayout layout, u32 firstSet,
+                                 u32 setCount, VkDescriptorSet* pDescriptorSets,
+                                 u32 dynamicOffsetCount, u32* pDynamicOffsets) {
   vkCmdBindDescriptorSets(cmdBuffer, bindPoint, layout, firstSet, setCount,
                           pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
+  return *this;
 }
-void CommandBuffer::bindDescriptorSetNoDynamic(
+CommandBuffer& CommandBuffer::bindDescriptorSetNoDynamic(
     VkPipelineBindPoint bindPoint, VkPipelineLayout layout, u32 firstSet,
     u32 setCount, VkDescriptorSet* pDescriptorSets) {
   return bindDescriptorSet(bindPoint, layout, firstSet, setCount,

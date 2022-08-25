@@ -207,8 +207,7 @@ struct App {
     cmdCompute.bindPipeline(VK_PIPELINE_BIND_POINT_COMPUTE, computePipeline);
     cmdCompute.bindDescriptorSetNoDynamic(VK_PIPELINE_BIND_POINT_COMPUTE,
                                           pipelineLayout, 0, 1, &descriptorSet);
-
-    vkCmdDispatch(cmdCompute, BUFFER_ELEMENTS / 64, 1, 1);
+    cmdCompute.dispatch(BUFFER_ELEMENTS / 64, 1, 1);
 
     barrier.srcAccessMask       = VK_ACCESS_SHADER_WRITE_BIT;
     barrier.dstAccessMask       = VK_ACCESS_TRANSFER_READ_BIT;
